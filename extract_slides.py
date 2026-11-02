@@ -1,9 +1,14 @@
 from pptx import Presentation
 from pathlib import Path
+from zipfile import ZipFile
 import json
 src=Path(r'C:\Users\ml\Documents\xwechat_files\wxid_br1bv0s9chxo22_2a69\msg\file\2026-11\项目申报(2).pptx')
 out=Path('ppt_assets'); out.mkdir(exist_ok=True)
 prs=Presentation(str(src))
+with ZipFile(src) as archive:
+    for item in archive.namelist():
+        if item.startswith('ppt/media/media') and item.lower().endswith('.mp4'):
+            (out/'robomaster-demo.mp4').write_bytes(archive.read(item))
 slides=[]
 for i,slide in enumerate(prs.slides,1):
     blocks=[]
